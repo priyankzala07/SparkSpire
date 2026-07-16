@@ -27,7 +27,7 @@ app.use('/api/events' , EventRoute)
     console.error("cant connect" , error)
 })
 app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-app.get("*", (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
 });
 app.listen(process.env.PORT , ()=>{
