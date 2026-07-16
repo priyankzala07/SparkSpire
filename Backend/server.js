@@ -5,9 +5,12 @@ const helmet = require('helmet')
 const  AuthRoute  = require('./Routes/Auth')
 const  BookingRoute  = require('./Routes/Booking')
 const  EventRoute  = require('./Routes/Event')
+const path = require("path");
 
 const mongoose = require('mongoose')
 require('dotenv').config()
+
+
 
 app.use(express.json())
 app.use(cors())
@@ -23,6 +26,10 @@ app.use('/api/events' , EventRoute)
 .catch((error)=>{
     console.error("cant connect" , error)
 })
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+});
 app.listen(process.env.PORT , ()=>{
     console.log("server created");
 })

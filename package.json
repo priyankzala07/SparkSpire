@@ -3,9 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "concurrently \"npm run start --prefix Backend\" \"npm run dev --prefix Frontend\"",
-    "start:backend": "npm run start --prefix Backend",
-    "start:frontend": "npm run dev --prefix Frontend"
+    "setup": "npm install --prefix Backend && npm install --prefix Frontend",
+    "install-all": "npm install --prefix Backend && npm install --prefix Frontend",
+    "build": "npm install --prefix Backend && npm install --prefix Frontend && npm --prefix Frontend run build",
+    "dev": "concurrently \"npm --prefix Backend run dev\" \"npm --prefix Frontend run dev\"",
+    "start": "npm --prefix Backend start"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"
