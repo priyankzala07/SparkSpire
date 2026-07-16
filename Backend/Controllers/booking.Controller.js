@@ -98,11 +98,13 @@ const confirmBooking = async (req, res) => {
             });
         }
 
+
         const event = await Event.findOneAndUpdate(
             { _id: booking.eventId._id, availableSeats: { $gt: 0 } },
-            { $inc: { availableSeats: -1 } },
             { new: true }
         );
+        event.availableSeats -= 1;
+        await event.save();
 
         if (!event) {
             await Booking.findByIdAndUpdate(booking._id, { status: 'pending', paymentStatus: 'not_paid' });
@@ -156,6 +158,8 @@ const cancelBooking = async (req, res) => {
 
         const wasConfirmed = booking.status === 'confirmed';
         booking.status = 'cancelled';
+        event.availableSeats += 1;
+        await event.save();
         await booking.save();
 
         // Only restore the seat if it was actually confirmed and deducted

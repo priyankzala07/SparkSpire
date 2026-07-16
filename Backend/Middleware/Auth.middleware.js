@@ -10,14 +10,14 @@ const protect = async ( req ,res , next)=>{
          req.user = await User.findById(decoded.id).select('-password');
          
          if(!req.user){
-             return res.status(401).json({massage:"no authorized" })
+             return res.status(401).json({message:"no authorized" })
          }
          next();
       } catch (error) {
-            res.status(401).json({ message: 'Not authorized, token failed' });
+            res.status(401).json({ message: 'Invalid token, Data Access Error' });
       }
 }
-else{return res.status(401).json({massage:"no authorized" })
+else{return res.status(401).json({message:"Invalid token" })
 }
 }
 

@@ -12,19 +12,18 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
 app.use(helmet())
-
+app.use(cors());
 app.use('/api/auth' , AuthRoute)
 app.use('/api/bookings' , BookingRoute)
 app.use('/api/events' , EventRoute)
-  mongoose.connect(process.env.MONGO_URI)
-.then(()=>{ 
-    console.log("connected to database");
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+    app.listen(process.env.PORT, () => {
+        console.log("Server created");
+    });
 })
-.catch((error)=>{
-    console.error("cant connect" , error)
-})
+.catch(console.error);
 app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 
 app.get("/{*splat}", (req, res) => {

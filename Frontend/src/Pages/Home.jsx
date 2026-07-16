@@ -32,7 +32,7 @@ const Home = () => {
 
     return (
         <div className=" home flex flex-col min-h-screen ">
-            <div className="mb-10 relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/95 p-6 md:p-8 shadow-sm">
+            <div className="mb-10 relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/95 p-6 md:p-8 shadow-sm hover:scale-105 transition duration-300">
                 <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${heroImage})` }}></div>
                 <div className="absolute inset-0 bg-slate-950/50"></div>
                 <div className="relative max-w-5xl mx-auto text-center">
@@ -83,9 +83,9 @@ const Home = () => {
             ) : events.length === 0 ? (
                 <div className="text-center py-20 mb-16 text-xl text-slate-400">No events found matching your search.</div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 ">
                     {events.map(event => (
-                        <div key={event._id} className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition flex flex-col">
+                        <div key={event._id} className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl  flex flex-col hover:scale-105 transition duration-300">
                             <div className="h-64 bg-slate-800 overflow-hidden relative">
                                 {event.image ? (
                                     <img src={`${event.image}?tr=w-full,h-full`} loading='lazy' alt={event.title} className="w-full h-full object-cover" />
@@ -116,7 +116,7 @@ const Home = () => {
                                         <div className="bg-slate-700 h-2 rounded-full" style={{ width: `${(event.availableSeats / event.totalSeats) * 100}%` }}></div>
                                     </div>
                                     <p className="text-xs text-slate-400 mb-4">Available Seats: {event.availableSeats}</p>
-                                    <Link to={`/events/${event._id}`} className="block w-full text-center bg-slate-800 hover:bg-slate-800 text-white font-semibold py-2 rounded-lg transition">
+                                    <Link to={`/events/${event._id}`} className="block w-full text-center bg-slate-800 hover:bg-green-900 text-white font-semibold py-2 rounded-lg  hover:scale-105 transition duration-300">
                                         View Details
                                     </Link>
                                 </div>

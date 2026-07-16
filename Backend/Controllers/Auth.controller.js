@@ -83,8 +83,13 @@ if (!password) {
 const loginUser = async ( req , res ) => {
 try {
 
-    const email = req.body.email.trim().toLowerCase();
+const email = req.body.email?.trim().toLowerCase();
 
+if (!email) {
+    return res.status(400).json({
+        message: "Email is required"
+    });
+}
     const  {password} = req.body
 
 const user = await userModel.findOne({ email });
