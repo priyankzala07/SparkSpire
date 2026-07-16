@@ -1,0 +1,14 @@
+{
+  "name": "mern-project",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "npm install --prefix Backend && npm install --prefix Frontend",
+    "install-all": "npm install --prefix Backend && npm install --prefix Frontend",
+    "dev": "concurrently \"npm --prefix Backend run dev\" \"npm --prefix Frontend run dev\"",
+    "start": "concurrently \"npm --prefix Backend start\" \"npm --prefix Frontend run preview\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
