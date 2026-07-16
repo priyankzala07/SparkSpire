@@ -1,12 +1,11 @@
 {
-  "name": "mern-project",
+  "name": "mern-project-root",
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "setup": "npm install --prefix Backend && npm install --prefix Frontend",
-    "install-all": "npm install --prefix Backend && npm install --prefix Frontend",
-    "dev": "concurrently \"npm --prefix Backend run dev\" \"npm --prefix Frontend run dev\"",
-    "start": "concurrently \"npm --prefix Backend start\" \"npm --prefix Frontend run preview\""
+    "start": "concurrently \"npm run start --prefix Backend\" \"npm run dev --prefix Frontend\"",
+    "start:backend": "npm run start --prefix Backend",
+    "start:frontend": "npm run dev --prefix Frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

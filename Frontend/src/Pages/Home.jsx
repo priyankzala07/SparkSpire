@@ -86,7 +86,7 @@ const Home = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {events.map(event => (
                         <div key={event._id} className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition flex flex-col">
-                            <div className="h48 bg-slate-800 overflow-hidden relative">
+                            <div className="h-64 bg-slate-800 overflow-hidden relative">
                                 {event.image ? (
                                     <img src={`${event.image}?tr=w-full,h-full`} loading='lazy' alt={event.title} className="w-full h-full object-cover" />
                                 ) : (

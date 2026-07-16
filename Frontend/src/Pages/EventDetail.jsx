@@ -64,7 +64,7 @@ const EventDetail = () => {
     return (
         <div className="max-w-4xl mx-auto bg-slate-900 rounded-2xl shadow-xl overflow-hidden mt-8">
             {event.image ? (
-                <img src={event.image} alt={event.title} className="w-full h-80 object-cover" />
+                <img src={event.image} alt={event.title} className="w-full h-64 object-cover" />
             ) : (
                 <div className="w-full h-64 bg-slate-950 flex items-center justify-center text-white/50 text-6xl font-black uppercase tracking-widest">
                     {event.category}
