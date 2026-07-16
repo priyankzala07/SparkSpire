@@ -20,8 +20,13 @@ const generateToken =  ( id , role )=>{
 
 const registerUser = async (req, res) => {
 
-    const email = req.body.email.trim().toLowerCase();
+const email = req.body.email?.trim().toLowerCase();
 
+if (!email) {
+    return res.status(400).json({
+        message: "Email is required"
+    });
+}
     const { userName,  password } = req.body;
 
     try {
@@ -32,7 +37,11 @@ const registerUser = async (req, res) => {
                 message: 'User already exists',
             });
         }
-
+if (!password) {
+    return res.status(400).json({
+        message: "Password required"
+    });
+}
                 if (password.length < 8) {
         return res.status(400).json({
             message: "Password must be at least 8 characters."
@@ -50,6 +59,7 @@ const registerUser = async (req, res) => {
 
         const crypto = require("crypto");
         const otp = crypto.randomInt(100000, 1000000).toString();
+        
 
         await OTPModel.create({
             email,
@@ -123,7 +133,13 @@ const otp = crypto.randomInt(100000, 1000000).toString();
     const verifyOtp = async ( req , res ) => {
     try {
 
-    const email = req.body.email.trim().toLowerCase();
+const email = req.body.email?.trim().toLowerCase();
+
+if (!email) {
+    return res.status(400).json({
+        message: "Email is required"
+    });
+}
     const otp = req.body.otp.toString().trim();
 
     const otpRecord = await OTPModel.findOne({

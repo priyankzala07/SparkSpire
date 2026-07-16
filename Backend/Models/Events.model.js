@@ -16,16 +16,19 @@ const eventSchema = new mongoose.Schema({
     },
     date:{
         type : Date,
-        required : true
+        required : true,
+        index : true
     },
     location:{
     type:String,
     required:true,
-    trim:true
+    trim:true,
+    index:true
     },
     category:{
         type:String , 
-        required : true
+        required : true,
+        index : true
     },
     totalSeats: {
     type: Number,

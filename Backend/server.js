@@ -6,13 +6,12 @@ const  AuthRoute  = require('./Routes/Auth')
 const  BookingRoute  = require('./Routes/Booking')
 const  EventRoute  = require('./Routes/Event')
 const path = require("path");
+const cookieParser = require('cookie-parser')
 
 const mongoose = require('mongoose')
 require('dotenv').config()
-
-
-
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors())
 app.use(helmet())
 
