@@ -8,6 +8,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const search = searchParams.get('search') || '';
+    const heroImage = events[0]?.image || 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1400&q=80';
 
      const fetchEvents = useCallback(async () => {
         try {
@@ -31,19 +32,19 @@ const Home = () => {
 
     return (
         <div className=" home flex flex-col min-h-screen ">
-            {/* Hero Section */}
-            <div className="relative bg-black text-white rounded-3xl overflow-hidden mb-12 shadow-2xl">
-                <div className="absolute inset-0 opacity-100 bg-[url('https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/8 to-transparent"></div>
-                <div className="relative p-10 md:p-20 text-center flex flex-col items-center z-10">
-                    <span className="bg-transparent font-black text-white backdrop-blur-xl px-4 py-1.5 rounded-full text-xs font-bold tracking-widest  mb-6 border border-white/20">Welcome To SparkSpire</span>
-                    <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-lg">
-                        Find Your Next <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-green-100">Unforgettable</span> Experience
+            <div className="mb-10 relative overflow-hidden rounded-3xl border border-slate-700 bg-slate-950/95 p-6 md:p-8 shadow-sm">
+                <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${heroImage})` }}></div>
+                <div className="absolute inset-0 bg-slate-950/50"></div>
+                <div className="relative max-w-5xl mx-auto text-center">
+                    <span className="inline-flex items-center justify-center rounded-full border border-slate-600 bg-slate-900/80 px-3 py-1 text-xs font-bold uppercase tracking-[0.3em] text-slate-300 mb-4">
+                        Welcome Back to SparkSpire
+                    </span>
+                    <h1 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+                        Discover Your Next <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-400">unforgettable</span> event.
                     </h1>
-                    <p className="text-slate-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-                        Discover the best tech conferences, late-night music festivals, and hands-on workshops happening directly in your area. Secure your spot today.
+                    <p className="mx-auto max-w-2xl text-sm md:text-base text-slate-300">
+                        Browse curated events, book faster, and stay inspired — now in a darker hero banner for a stronger mood.
                     </p>
-
                 </div>
             </div>
 
@@ -78,11 +79,11 @@ const Home = () => {
             </div>
 
             {loading ? (
-                <div className="text-center py-20 text-xl font-semibold text-slate-400">Loading events...</div>
+                <div className="text-center py-20 mb-16 text-xl font-semibold text-slate-400">Loading events...</div>
             ) : events.length === 0 ? (
-                <div className="text-center py-20 text-xl text-slate-400">No events found matching your search.</div>
+                <div className="text-center py-20 mb-16 text-xl text-slate-400">No events found matching your search.</div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                     {events.map(event => (
                         <div key={event._id} className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition flex flex-col">
                             <div className="h48 bg-slate-800 overflow-hidden relative">
