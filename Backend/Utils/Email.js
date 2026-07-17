@@ -22,22 +22,23 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 // Create transporter (Gmail SMTP only)
 const transporterConfig = {
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // TLS
+  port: 465,
+  secure: true, // SMTPS
   family: 4, // Force IPv4
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS, // Gmail App Password
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
   tls: {
+    // allow self-signed certs where necessary; adjust in production
     rejectUnauthorized: false,
   },
 };
 
-console.log("🔧 Using Gmail SMTP (smtp.gmail.com)");
+console.log("🔧 Using Gmail SMTPS (smtp.gmail.com:465)");
 
 const transporter = nodemailer.createTransport(transporterConfig);
 
