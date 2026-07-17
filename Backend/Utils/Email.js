@@ -1,7 +1,18 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
+const dns = require("dns");
 
 dotenv.config();
+
+// Prefer IPv4 over IPv6 on networks without IPv6 to avoid ENETUNREACH
+if (typeof dns.setDefaultResultOrder === "function") {
+  try {
+    dns.setDefaultResultOrder("ipv4first");
+    console.log("🔧 DNS default result order set to ipv4first");
+  } catch (e) {
+    console.warn("⚠️ Could not set DNS result order:", e);
+  }
+}
 
 // Check required environment variables
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
