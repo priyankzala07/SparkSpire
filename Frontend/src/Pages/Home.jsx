@@ -8,7 +8,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [searchParams] = useSearchParams();
     const search = searchParams.get('search') || '';
-    const heroImage = events[0]?.image || 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1400&q=80';
+    const heroImage ='https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1400&q=80';
 
      const fetchEvents = useCallback(async () => {
         try {
@@ -157,6 +157,11 @@ const Home = () => {
                 </p>
                 <div className="text-xs text-slate-400 font-medium uppercase tracking-wider">
                     &copy; {new Date().getFullYear()} SparkSpire Platform. All rights reserved.
+                </div>
+                <div className="text-xs text-slate-400 font-medium uppercase tracking-wider flex items-center justify-between mt-5">
+                   <div className='bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 bg-clip-text text-transparent text-md'><h5>Created by : PRIYANK zala </h5></div>
+                   <div className='bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 bg-clip-text text-transparent text-md'> location : Junagadh</div>
+                   <div className='bg-gradient-to-r from-blue-600 via-cyan-500 to-emerald-500 bg-clip-text text-transparent text-md'>contact number : 8780628273</div>
                 </div>
             </footer>
         </div>

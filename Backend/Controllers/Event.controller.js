@@ -81,38 +81,30 @@ const CreateEvent = async (req, res) => {
 };
 
 const DeleteEvent = async (req, res) => {
-    async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid event ID format" });
+      return res.status(400).json({ error: 'Invalid event ID format' });
     }
 
-    const hasActiveBookings = await Booking.exists({
-            eventId: {id},
-            status: { $in: ['pending', 'confirmed'] }
-        });
-        if (hasActiveBookings) {
-            return res.status(400).json({ message: 'Cannot delete an event with active bookings' });
-        }
-
-    // Find and delete event
-    const deletedEvent = await Event.findByIdAndDelete(id);
+    const deletedEvent = await eventModel.findByIdAndDelete(id);
 
     if (!deletedEvent) {
-      return res.status(404).json({ error: "Event not found" });
+      return res.status(404).json({ error: 'Event not found' });
     }
 
+    await Booking.deleteMany({ eventId: id });
+
     return res.status(200).json({
-      message: "Event deleted successfully",
+      message: 'Event deleted successfully',
       deletedEvent,
     });
   } catch (err) {
-    console.error("Error deleting event:", err);
-    return res.status(500).json({ error: "Server error while deleting event" });
+    console.error('Error deleting event:', err);
+    return res.status(500).json({ error: 'Server error while deleting event' });
   }
+};
 
 const UpdateEvent = async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) {
@@ -141,5 +133,5 @@ module.exports = {
     GetEventById,
     CreateEvent,
     DeleteEvent,
-    UpdateEvent
+    UpdateEvent,
 };

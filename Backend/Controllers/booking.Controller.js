@@ -10,9 +10,14 @@ const sendBookingOTP = async (req, res) => {
     try {
         const otp = generateOTP();
         await OTPModel.findOneAndDelete({ email: req.user.email, action: 'event_booking' });
-        await OTPModel.create({ email: req.user.email, code:otp , action: 'event_booking' });
-        await sendOTPEmail(req.user.email, otp, 'event_booking');
-        res.json({ message: 'OTP sent successfully' });
+        await OTPModel.create({ email: req.user.email, code: otp, action: 'event_booking' });
+        const emailSent = await sendOTPEmail(req.user.email, otp, 'event_booking');
+
+        res.json({
+            message: emailSent
+                ? 'OTP sent successfully'
+                : 'OTP generated successfully. Email delivery is currently unavailable.'
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error sending OTP', error: error.message });
     }

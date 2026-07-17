@@ -3,19 +3,27 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const isEmailConfigured = () => Boolean(process.env.SMTP_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL);
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",        // SMTP server
-  port: 587,                     // TLS port
-  secure: false,                 // true for port 465, false for 587
+  host: process.env.SMTP_HOST,
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL,    // your email
-    pass: process.env.EMAIL_PASSWORD,      // app password (not your main password)
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 
+
 const sendBookingEmail = async (email, userName, eventTitle) => {
     try {
+        if (!isEmailConfigured()) {
+            console.warn('Email delivery skipped because SMTP configuration is incomplete.');
+            return false;
+        }
+
         const mailOptions = {
             from: process.env.EMAIL,
             to: email,
@@ -28,17 +36,26 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
         };
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully to', email);
+        return true;
     } catch (error) {
         console.error('Error sending email:', error);
+        return false;
     }
 };
 
-const sendOTPEmail = async ( email, otp, type) => {
+const sendOTPEmail = async (email, otp, type) => {
     try {
+        if (!isEmailConfigured()) {
+            console.warn('OTP email delivery skipped because SMTP configuration is incomplete.');
+            return false;
+        }
+
         const title = type === 'account_verification' ? 'Verify your Eventora Account' : 'Eventora Booking Verification';
         const msg = type === 'account_verification'
             ? 'Please use the following OTP to verify your new Eventora account.'
             : 'Please use the following OTP to verify and confirm your event booking.';
+
+        console.log(`Sending OTP email to ${email} for ${type} with OTP: ${otp}`);
 
         const mailOptions = {
             from: process.env.EMAIL,
@@ -57,10 +74,11 @@ const sendOTPEmail = async ( email, otp, type) => {
         };
         await transporter.sendMail(mailOptions);
         console.log(`OTP sent to ${email} for ${type}`);
+        return true;
     } catch (error) {
-    console.error('Error sending OTP email:', error);
-    throw error;
-}
+        console.error('Error sending OTP email:', error);
+        return false;
+    }
 };
 
 module.exports = { sendBookingEmail, sendOTPEmail };

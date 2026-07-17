@@ -80,8 +80,8 @@ const AdminDashboard = () => {
             try {
                 await api.delete(`/events/${id}`);
                 fetchData();
-            } catch {
-                alert('Error deleting event');
+            } catch (error) {
+                alert(error.response?.data?.message || error.response?.data?.error || 'Error deleting event');
             }
         }
     };
