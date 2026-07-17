@@ -19,23 +19,49 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
   console.error("❌ EMAIL_USER or EMAIL_PASS is missing in environment variables.");
 }
 
-// Create transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // TLS
-  family: 4, // Force IPv4
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Gmail App Password
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+// Create transporter (supports Gmail SMTP or SendGrid SMTP via SENDGRID_API_KEY)
+let transporterConfig;
+if (process.env.SENDGRID_API_KEY) {
+  transporterConfig = {
+    host: "smtp.sendgrid.net",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "apikey",
+      pass: process.env.SENDGRID_API_KEY,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  };
+  console.log("🔧 Using SendGrid SMTP (smtp.sendgrid.net)");
+} else {
+  transporterConfig = {
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // TLS
+    family: 4, // Force IPv4
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS, // Gmail App Password
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  };
+  console.log("🔧 Using Gmail SMTP (smtp.gmail.com)");
+}
+
+const transporter = nodemailer.createTransport(transporterConfig);
+
+// Default From address
+const defaultFrom = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'no-reply@example.com';
 
 // Verify SMTP connection when server starts
 transporter.verify((error, success) => {
