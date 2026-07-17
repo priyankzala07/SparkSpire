@@ -13,9 +13,11 @@ const Home = () => {
      const fetchEvents = useCallback(async () => {
         try {
             const { data } = await api.get(`/events?search=${search}`);
-            setEvents(data);
+            const normalizedEvents = Array.isArray(data) ? data : (data?.events || data ? [data] : []);
+            setEvents(normalizedEvents);
         } catch (error) {
             console.error('Error fetching events:', error);
+            setEvents([]);
         } finally {
             setLoading(false);
         }

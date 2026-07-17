@@ -6,10 +6,10 @@ const getBaseUrl = () => {
     }
 
     if (window.location.hostname === 'localhost') {
-        return 'http://localhost:5000';
+        return 'http://localhost:5000/api';
     }
 
-    return 'https://sparkspire.onrender.com';
+    return 'https://sparkspire.onrender.com/api';
 };
 
 const api = axios.create({

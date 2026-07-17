@@ -20,7 +20,7 @@ const EventDetail = () => {
         const fetchEvent = async () => {
             try {
                 const { data } = await api.get(`/events/${id}`);
-                setEvent(data);
+                setEvent(data?.event || data);
             } catch {
                 setError('Failed to load event details.');
             } finally {
