@@ -7,18 +7,19 @@ const isEmailConfigured = () =>
   Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",   // hardcoded Gmail host
-  port: 465,                // SSL port
-  secure: true,             // true for port 465
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,   // full Gmail address
-    pass: process.env.EMAIL_PASS,   // Gmail App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS, // must be Gmail App Password
   },
   tls: {
     rejectUnauthorized: false,
-    family: 4   // force IPv4 to avoid Render IPv6 timeout
+    family:4   // 👈 force IPv4 instead of IPv6
   }
 });
+
 
 transporter.verify((error, success) => {
   if (error) {
