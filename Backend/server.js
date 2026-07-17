@@ -17,7 +17,7 @@ app.use(helmet({
         directives: {
             defaultSrc: ["'self'"],
             connectSrc: ["'self'", "http://localhost:5000", "http://localhost:5173", "https://sparkspire.onrender.com", "ws://localhost:5173", "wss://localhost:5173"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://images.pexels.com"],
+            imgSrc: ["'self'", "data:", "blob:", "https:"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
             objectSrc: ["'none'"],
