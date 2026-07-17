@@ -8,7 +8,7 @@ dotenv.config();
 if (typeof dns.setDefaultResultOrder === "function") {
   try {
     dns.setDefaultResultOrder("ipv4first");
-    console.log("✅ DNS set to IPv4 first");
+    console.log("? DNS set to IPv4 first");
   } catch (err) {
     console.error("DNS Error:", err);
   }
@@ -16,7 +16,7 @@ if (typeof dns.setDefaultResultOrder === "function") {
 
 // Check environment variables
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-  console.error("❌ EMAIL_USER or EMAIL_PASS is missing.");
+  console.error("? EMAIL_USER or EMAIL_PASS is missing.");
 }
 
 // Create Gmail transporter
@@ -40,10 +40,10 @@ const transporter = nodemailer.createTransport({
 // Verify SMTP connection
 transporter.verify((error) => {
   if (error) {
-    console.error("❌ SMTP Connection Failed");
+    console.error("? SMTP Connection Failed");
     console.error(error);
   } else {
-    console.log("✅ Gmail SMTP Connected Successfully");
+    console.log("? Gmail SMTP Connected Successfully");
   }
 });
 
@@ -51,7 +51,7 @@ transporter.verify((error) => {
 
 const sendBookingEmail = async (email, userName, eventTitle) => {
   try {
-    console.log(`📧 Sending booking email to ${email}`);
+    console.log(`?? Sending booking email to ${email}`);
 
     await transporter.sendMail({
       from: `"SparkSpire" <${process.env.EMAIL_USER}>`,
@@ -59,7 +59,7 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
       subject: `Booking Confirmed - ${eventTitle}`,
       html: `
         <div style="font-family:Arial,sans-serif;padding:20px">
-          <h2>Hello ${userName} 👋</h2>
+          <h2>Hello ${userName} ??</h2>
 
           <p>Your booking for <strong>${eventTitle}</strong> has been confirmed.</p>
 
@@ -74,11 +74,11 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
       `,
     });
 
-    console.log("✅ Booking email sent successfully.");
+    console.log("? Booking email sent successfully.");
 
     return true;
   } catch (err) {
-    console.error("❌ Booking Email Error");
+    console.error("? Booking Email Error");
     console.error(err);
     return false;
   }
@@ -88,7 +88,7 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
 
 const sendOTPEmail = async (email, otp, type) => {
   try {
-    console.log(`📧 Sending OTP to ${email}`);
+    console.log(`?? Sending OTP to ${email}`);
 
     const subject =
       type === "account_verification"
@@ -138,11 +138,11 @@ const sendOTPEmail = async (email, otp, type) => {
       `,
     });
 
-    console.log("✅ OTP email sent successfully.");
+    console.log("? OTP email sent successfully.");
 
     return true;
   } catch (err) {
-    console.error("❌ OTP Email Error");
+    console.error("? OTP Email Error");
     console.error(err);
     return false;
   }
