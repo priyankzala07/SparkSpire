@@ -29,6 +29,3 @@ app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 app.get("/{*splat}", (req, res) => {
     res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
 });
-app.listen(process.env.PORT , ()=>{
-    console.log("server created");
-})
