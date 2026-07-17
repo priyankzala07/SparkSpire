@@ -12,9 +12,21 @@ const mongoose = require('mongoose')
 require('dotenv').config()
 app.use(express.json())
 app.use(cookieParser())
-app.use(helmet())
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            connectSrc: ["'self'", "http://localhost:5000", "http://localhost:5173", "https://sparkspire.onrender.com", "ws://localhost:5173", "wss://localhost:5173"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://images.pexels.com"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    }
+}))
 app.use(cors({
-    origin: 'https://sparkspire.onrender.com/',
+    origin: ['http://localhost:5173', 'http://localhost:5000', 'https://sparkspire.onrender.com'],
     credentials: true
 }));
 app.use('/api/auth' , AuthRoute)
