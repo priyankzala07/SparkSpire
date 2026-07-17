@@ -7,13 +7,22 @@ const isEmailConfigured = () => Boolean(process.env.SMTP_HOST && process.env.EMA
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP Error:", error);
+  } else {
+    console.log("Server is ready to take messages");
+  }
+});
+
 
 
 
