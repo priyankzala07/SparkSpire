@@ -34,7 +34,7 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
         }
 
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: process.env.EMAIL_USER,
             to: email,
             subject: `Booking Confirmed: ${eventTitle}`,
             html: `
@@ -67,7 +67,7 @@ const sendOTPEmail = async (email, otp, type) => {
         console.log(`Sending OTP email to ${email} for ${type} with OTP: ${otp}`);
 
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: process.env.EMAIL_USER,
             to: email,
             subject: title,
             html: `
