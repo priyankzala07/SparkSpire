@@ -1,8 +1,9 @@
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const dns = require("dns");
+const path = require("path");
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 if (typeof dns.setDefaultResultOrder === "function") {
   try {
@@ -18,14 +19,12 @@ if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 }
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  family: 4,
+  secure: false,
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 10000,
@@ -34,12 +33,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter.verify((error) => {
+transporter.verify((error, success) => {
   if (error) {
-    console.error("connetction fail  thay se");
-    console.error(error);
+
+    console.error("SMTP Connection Failed:", error);
   } else {
-    console.log("Gmail SMTP Connected Successfully");
+    console.log("Gmail SMTP Connected Successfully", success);
   }
 });
 
