@@ -203,7 +203,7 @@ const AdminDashboard = () => {
                                                 <span className="flex items-center gap-1 font-medium"><div className={`w-2 h-2 rounded-full ${event.availableSeats > 0 ? 'bg-emerald-950/300' : 'bg-red-950/300'}`}></div> {event.availableSeats}/{event.totalSeats} seats</span>
                                             </div>
                                         </div>
-                                        <button onClick={() => handleDeleteEvent(event.id)} className="w-full sm:w-auto text-red-500 hover:text-white hover:bg-red-950/300 border border-red-200 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm shrink-0">
+                                        <button onClick={() => handleDeleteEvent(event._id)} className="w-full sm:w-auto text-red-500 hover:text-white hover:bg-red-950/300 border border-red-200 px-4 py-2 rounded-lg text-sm font-bold transition shadow-sm shrink-0">
                                             Delete
                                         </button>
                                     </li>
