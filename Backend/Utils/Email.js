@@ -2,22 +2,15 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
 dotenv.config();
-
-const isEmailConfigured = () =>
-  Boolean(process.env.EMAIL_USER && process.env.EMAIL_PASS);
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
+  family:4,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS, // must be Gmail App Password
   },
-  tls: {
-    rejectUnauthorized: false,
-    family:4   // 👈 force IPv4 instead of IPv6
-  }
 });
 
 
@@ -31,11 +24,6 @@ transporter.verify((error, success) => {
 
 const sendBookingEmail = async (email, userName, eventTitle) => {
   try {
-    if (!isEmailConfigured()) {
-      console.warn('Email delivery skipped because SMTP configuration is incomplete.');
-      return false;
-    }
-
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
@@ -57,10 +45,6 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
 
 const sendOTPEmail = async (email, otp, type) => {
   try {
-    if (!isEmailConfigured()) {
-      console.warn('OTP email delivery skipped because SMTP configuration is incomplete.');
-      return false;
-    }
 
     const title = type === 'account_verification'
       ? 'Verify your Eventora Account'
