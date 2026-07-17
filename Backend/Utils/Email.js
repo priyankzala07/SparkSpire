@@ -6,7 +6,7 @@ dotenv.config();
 const isEmailConfigured = () => Boolean(process.env.SMTP_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS );
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
+  host: smtp.gmail.com,
   port: 465,
   secure: true,
   auth: {
