@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+require('dotenv').config(),
 const dns = require("dns");
 
 dotenv.config();
@@ -18,7 +18,7 @@ if (typeof dns.setDefaultResultOrder === "function") {
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
   console.error("❌ EMAIL_USER or EMAIL_PASS is missing in environment variables.");
 }
-
+console.log(process.env.EMAIL_USER)
 // Create transporter (Gmail SMTP only)
 const transporterConfig = {
   host: "smtp.gmail.com",
