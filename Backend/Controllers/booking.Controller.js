@@ -87,7 +87,7 @@ const confirmBooking = async (req, res) => {
         const booking = await Booking.findOneAndUpdate(
             { _id: req.params.id, status: 'pending' },
             { $set: { status: 'confirmed', paymentStatus: paymentStatus || 'paid' } },
-            { new: true }
+            { new: true, returnDocument: 'after' }
         ).populate('userId').populate('eventId');
 
         if (!booking) {
@@ -107,7 +107,8 @@ const confirmBooking = async (req, res) => {
 
         const event = await Event.findOneAndUpdate(
             { _id: booking.eventId._id, availableSeats: { $gt: 0 } },
-            { new: true }
+            { $inc: { availableSeats: -1 } },
+            { new: true, returnDocument: 'after' }
         );
         event.availableSeats -= 1;
         await event.save();

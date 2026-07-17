@@ -162,7 +162,7 @@ if (!email) {
 const user = await userModel.findOneAndUpdate(
     { email },
     { isVerified: true },
-    { new: true }
+    { new: true, returnDocument: 'after' }
 );
     await OTPModel.deleteMany({email , action:'account_verification'})
     res.json({
