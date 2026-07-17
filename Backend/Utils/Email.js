@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const isEmailConfigured = () => Boolean(process.env.SMTP_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS && process.env.EMAIL);
+const isEmailConfigured = () => Boolean(process.env.SMTP_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS );
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
