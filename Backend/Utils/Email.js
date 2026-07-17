@@ -28,11 +28,6 @@ transporter.verify((error, success) => {
 
 const sendBookingEmail = async (email, userName, eventTitle) => {
     try {
-        if (!isEmailConfigured()) {
-            console.warn('Email delivery skipped because SMTP configuration is incomplete.');
-            return false;
-        }
-
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
