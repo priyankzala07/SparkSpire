@@ -49,11 +49,6 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
 
 const sendOTPEmail = async (email, otp, type) => {
     try {
-        if (!isEmailConfigured()) {
-            console.warn('OTP email delivery skipped because SMTP configuration is incomplete.');
-            return false;
-        }
-
         const title = type === 'account_verification' ? 'Verify your Eventora Account' : 'Eventora Booking Verification';
         const msg = type === 'account_verification'
             ? 'Please use the following OTP to verify your new Eventora account.'
