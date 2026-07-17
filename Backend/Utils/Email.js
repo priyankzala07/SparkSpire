@@ -28,6 +28,7 @@ transporter.verify((error, success) => {
 
 const sendBookingEmail = async (email, userName, eventTitle) => {
     try {
+        
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,

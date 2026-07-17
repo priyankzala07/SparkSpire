@@ -11,12 +11,13 @@ const sendBookingOTP = async (req, res) => {
         const otp = generateOTP();
         await OTPModel.findOneAndDelete({ email: req.user.email, action: 'event_booking' });
         await OTPModel.create({ email: req.user.email, code: otp, action: 'event_booking' });
-        const emailSent = await sendOTPEmail(req.user.email, otp, 'event_booking');
+
+        sendOTPEmail(req.user.email, otp, 'event_booking')
+            .then(() => console.log(`OTP email dispatch started for ${req.user.email}`))
+            .catch((error) => console.error('Background OTP email failed:', error));
 
         res.json({
-            message: emailSent
-                ? 'OTP sent successfully'
-                : 'OTP generated successfully. Email delivery is currently unavailable.'
+            message: 'OTP generated successfully. Please check your email shortly.'
         });
     } catch (error) {
         res.status(500).json({ message: 'Error sending OTP', error: error.message });
