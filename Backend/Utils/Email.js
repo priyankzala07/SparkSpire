@@ -1,94 +1,96 @@
 const nodemailer = require("nodemailer");
-require('dotenv').config(),
+const dotenv = require("dotenv");
 const dns = require("dns");
 
 dotenv.config();
 
-// Prefer IPv4 over IPv6 on networks without IPv6 to avoid ENETUNREACH
+// Force IPv4 (helps avoid Render IPv6 issues)
 if (typeof dns.setDefaultResultOrder === "function") {
   try {
     dns.setDefaultResultOrder("ipv4first");
-    console.log("🔧 DNS default result order set to ipv4first");
-  } catch (e) {
-    console.warn("⚠️ Could not set DNS result order:", e);
+    console.log("✅ DNS set to IPv4 first");
+  } catch (err) {
+    console.error("DNS Error:", err);
   }
 }
 
-// Check required environment variables
+// Check environment variables
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-  console.error("❌ EMAIL_USER or EMAIL_PASS is missing in environment variables.");
+  console.error("❌ EMAIL_USER or EMAIL_PASS is missing.");
 }
-console.log(process.env.EMAIL_USER)
-// Create transporter (Gmail SMTP only)
-const transporterConfig = {
+
+// Create Gmail transporter
+const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // TLS
-  family: 4, // Force IPv4
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS, // Gmail App Password
   },
+  family: 4,
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 10000,
   tls: {
     rejectUnauthorized: false,
   },
-};
+});
 
-console.log("🔧 Using Gmail SMTP (smtp.gmail.com)");
-
-const transporter = nodemailer.createTransport(transporterConfig);
-
-// Default From address
-const defaultFrom = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'no-reply@example.com';
-
-// Verify SMTP connection when server starts
-transporter.verify((error, success) => {
+// Verify SMTP connection
+transporter.verify((error) => {
   if (error) {
-    console.error("❌ SMTP Verify Error:");
+    console.error("❌ SMTP Connection Failed");
     console.error(error);
   } else {
-    console.log("✅ SMTP server is ready to send emails.");
+    console.log("✅ Gmail SMTP Connected Successfully");
   }
 });
 
-// Booking Confirmation Email
+// ================= Booking Email =================
+
 const sendBookingEmail = async (email, userName, eventTitle) => {
   try {
-    console.log(`📧 Sending booking confirmation to ${email}`);
+    console.log(`📧 Sending booking email to ${email}`);
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"SparkSpire" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Booking Confirmed - ${eventTitle}`,
       html: `
-        <div style="font-family:Arial,sans-serif">
+        <div style="font-family:Arial,sans-serif;padding:20px">
           <h2>Hello ${userName} 👋</h2>
+
           <p>Your booking for <strong>${eventTitle}</strong> has been confirmed.</p>
-          <p>Thank you for using SparkSpire.</p>
+
+          <p>Thank you for choosing <b>SparkSpire</b>.</p>
+
+          <hr>
+
+          <p style="color:gray;font-size:14px">
+            This is an automated email. Please do not reply.
+          </p>
         </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     console.log("✅ Booking email sent successfully.");
+
     return true;
-  } catch (error) {
-    console.error("❌ Booking Email Error:");
-    console.error(error);
+  } catch (err) {
+    console.error("❌ Booking Email Error");
+    console.error(err);
     return false;
   }
 };
 
-// OTP Email
+// ================= OTP Email =================
+
 const sendOTPEmail = async (email, otp, type) => {
   try {
     console.log(`📧 Sending OTP to ${email}`);
 
-    const title =
+    const subject =
       type === "account_verification"
         ? "Verify Your SparkSpire Account"
         : "SparkSpire Booking Verification";
@@ -98,43 +100,50 @@ const sendOTPEmail = async (email, otp, type) => {
         ? "Use the OTP below to verify your account."
         : "Use the OTP below to verify your booking.";
 
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"SparkSpire" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: title,
+      subject,
       html: `
         <div style="font-family:Arial,sans-serif;text-align:center;padding:30px">
-          <h2>${title}</h2>
+
+          <h2>${subject}</h2>
+
           <p>${message}</p>
 
           <div
             style="
-              font-size:32px;
+              display:inline-block;
+              padding:20px 30px;
+              font-size:34px;
               font-weight:bold;
               letter-spacing:8px;
-              padding:20px;
-              background:#f4f4f4;
-              display:inline-block;
+              background:#f3f3f3;
               border-radius:8px;
+              margin:20px 0;
             "
           >
             ${otp}
           </div>
 
-          <p style="margin-top:20px;color:#666">
-            This OTP expires in 5 minutes.
+          <p>This OTP expires in <b>5 minutes</b>.</p>
+
+          <hr>
+
+          <p style="color:gray;font-size:14px">
+            If you didn't request this OTP, you can safely ignore this email.
           </p>
+
         </div>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    console.log("✅ OTP email sent successfully.");
 
-    console.log("✅ OTP Email Sent Successfully");
     return true;
-  } catch (error) {
-    console.error("❌ OTP Email Error:");
-    console.error(error);
+  } catch (err) {
+    console.error("❌ OTP Email Error");
+    console.error(err);
     return false;
   }
 };
