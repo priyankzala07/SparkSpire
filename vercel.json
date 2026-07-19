@@ -1,8 +1,12 @@
 {
-  "version": 3,
-  "installCommand": "cd Frontend && npm install",
-  "buildCommand": "cd Frontend && npm run build",
-  "outputDirectory": "Frontend/dist",
+  "version": 2,
+  "builds": [
+    {
+      "src": "Frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
   "routes": [
     { "src": "/(.*)", "dest": "/index.html" }
   ]
