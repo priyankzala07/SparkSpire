@@ -16,7 +16,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            connectSrc: ["'self'", "http://localhost:5000", "http://localhost:5173", "https://sparkspire.onrender.com", "ws://localhost:5173", "wss://localhost:5173"],
+            connectSrc: ["'self'", "http://localhost:5000", "http://localhost:5173", "https://spark-spire-two.vercel.app", "ws://localhost:5173", "wss://localhost:5173"],
             imgSrc: ["'self'", "data:", "blob:", "https:"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
@@ -26,7 +26,7 @@ app.use(helmet({
     }
 }))
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5000', 'https://sparkspire.onrender.com'],
+    origin: ['http://localhost:5173', 'http://localhost:5000', 'https://spark-spire-two.vercel.app'],
     credentials: true
 }));
 app.use('/api/auth' , AuthRoute)

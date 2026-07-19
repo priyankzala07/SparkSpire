@@ -9,7 +9,7 @@ const getBaseUrl = () => {
         return 'http://localhost:5000/api';
     }
 
-    return 'https://sparkspire.onrender.com/api';
+    return 'https://spark-spire-two.vercel.app/api';
 };
 
 const api = axios.create({
