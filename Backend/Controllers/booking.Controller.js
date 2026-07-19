@@ -84,11 +84,9 @@ const confirmBooking = async (req, res) => {
             return res.status(400).json({ message: 'Invalid booking ID' });
         }
 
-        const booking = await Booking.findOneAndUpdate(
-            { _id: req.params.id, status: 'pending' },
-            { $set: { status: 'confirmed', paymentStatus: paymentStatus || 'paid' } },
-            { new: true, returnDocument: 'after' }
-        ).populate('userId').populate('eventId');
+        const booking = await Booking.findOne({ _id: req.params.id, status: 'pending' })
+            .populate('userId')
+            .populate('eventId');
 
         if (!booking) {
             const existingBooking = await Booking.findById(req.params.id);
@@ -97,50 +95,31 @@ const confirmBooking = async (req, res) => {
             });
         }
 
-        if (!booking.eventId) {
-            await Booking.findByIdAndUpdate(booking._id, { status: 'pending', paymentStatus: 'not_paid' });
-            return res.status(404).json({
-                message: "Event not found"
-            });
-        }
-
-
-        const event = await Event.findOneAndUpdate(
-            { _id: booking.eventId._id, availableSeats: { $gt: 0 } },
-            { $inc: { availableSeats: -1 } },
-            { new: true, returnDocument: 'after' }
-        );
-        event.availableSeats -= 1;
-        await event.save();
-
+        const event = booking.eventId;
         if (!event) {
-            await Booking.findByIdAndUpdate(booking._id, { status: 'pending', paymentStatus: 'not_paid' });
+            return res.status(404).json({ message: 'Event not found' });
+        }
+        if (event.availableSeats <= 0) {
             return res.status(400).json({ message: 'No seats available' });
         }
 
-        const responseBooking = booking.toObject();
-        responseBooking.eventId = event.toObject();
+        booking.status = 'confirmed';
+        booking.paymentStatus = paymentStatus || 'paid';
+        await booking.save();
+
+        event.availableSeats -= 1;
+        await event.save();
 
         res.json({
-            message: "Booking confirmed successfully",
-            booking: responseBooking
+            message: 'Booking confirmed successfully',
+            booking: await booking.populate('userId').populate('eventId')
         });
 
-        // Email delivery must not delay the approval response shown in the dashboard.
-        sendBookingEmail(
-            booking.userId.email,
-            booking.userId.name,
-            event.title
-        );
-
+        sendBookingEmail(booking.userId.email, booking.userId.name, event.title);
     } catch (error) {
-    console.error("Confirm Booking Error:", error);
-
-    return res.status(500).json({
-        message: "Server Error",
-        error: error.message
-    });
-}
+        console.error('Confirm Booking Error:', error);
+        return res.status(500).json({ message: 'Server Error', error: error.message });
+    }
 };
 
 const getMyBookings = async (req, res) => {
@@ -165,11 +144,8 @@ const cancelBooking = async (req, res) => {
 
         const wasConfirmed = booking.status === 'confirmed';
         booking.status = 'cancelled';
-        event.availableSeats += 1;
-        await event.save();
         await booking.save();
 
-        // Only restore the seat if it was actually confirmed and deducted
         if (wasConfirmed) {
             await Event.findByIdAndUpdate(booking.eventId, { $inc: { availableSeats: 1 } });
         }

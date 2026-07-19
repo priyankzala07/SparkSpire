@@ -32,18 +32,24 @@ app.use(cors({
 app.use('/api/auth' , AuthRoute)
 app.use('/api/bookings' , BookingRoute)
 app.use('/api/events' , EventRoute)
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-    app.listen(process.env.PORT, () => {
-        console.log("Server connected and running on port " + process.env.PORT);
-    });
-})
-.catch(console.error);
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
+const port = process.env.PORT || 5000;
+const frontendDist = path.join(__dirname, '../Frontend/dist');
 
-app.get("/{*splat}", (req, res) => {
-    res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+app.use(express.static(frontendDist));
+app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ message: 'API route not found' });
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
 });
-app.listen(process.env.PORT, () => {
-        console.log("Server created");
-});
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server connected and running on port ${port}`);
+        });
+    })
+    .catch((error) => {
+        console.error('MongoDB connection error:', error);
+        process.exit(1);
+    });
