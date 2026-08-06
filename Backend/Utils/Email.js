@@ -14,20 +14,29 @@ if (typeof dns.setDefaultResultOrder === "function") {
   }
 }
 
-if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-  console.error("EMAIL_USER or EMAIL_PASS is missing.");
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+const smtpPort = Number(process.env.SMTP_PORT || 587);
+const smtpSecure = process.env.SMTP_SECURE === "true";
+const emailFrom = process.env.EMAIL_FROM || emailUser || "no-reply@sparkspire.com";
+
+if (!emailUser || !emailPass) {
+  console.error("EMAIL_USER or EMAIL_PASS is missing. Email delivery will be disabled until these are configured in production.");
 }
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpSecure,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: emailUser,
+    pass: emailPass,
   },
-  secure: false,
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  requireTLS: true,
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 15000,
   tls: {
     rejectUnauthorized: false,
   },
@@ -35,24 +44,28 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) => {
   if (error) {
-
     console.error("SMTP Connection Failed:", error);
   } else {
-    console.log("Gmail SMTP Connected Successfully", success);
+    console.log("SMTP Connected Successfully", success);
   }
 });
 
 const sendBookingEmail = async (email, userName, eventTitle) => {
   try {
+    if (!emailUser || !emailPass) {
+      console.error("Email delivery skipped because credentials are missing.");
+      return false;
+    }
+
     console.log(`Sending booking email to ${email}`);
 
     await transporter.sendMail({
-      from: `"SparkSpire" <${process.env.EMAIL_USER}>`,
+      from: `"SparkSpire" <${emailFrom}>`,
       to: email,
       subject: `Booking Confirmed - ${eventTitle}`,
       html: `
         <div style="font-family:Arial,sans-serif;padding:20px">
-          <h2>Hello ${userName} ??</h2>
+          <h2>Hello ${userName}!</h2>
           <p>Your booking for <strong>${eventTitle}</strong> has been confirmed.</p>
           <p>Thank you for choosing <b>SparkSpire</b>.</p>
           <hr>
@@ -72,6 +85,11 @@ const sendBookingEmail = async (email, userName, eventTitle) => {
 
 const sendOTPEmail = async (email, otp, type) => {
   try {
+    if (!emailUser || !emailPass) {
+      console.error("Email delivery skipped because credentials are missing.");
+      return false;
+    }
+
     console.log(`Sending OTP to ${email}`);
 
     const subject =
@@ -85,7 +103,7 @@ const sendOTPEmail = async (email, otp, type) => {
         : "Use the OTP below to verify your booking.";
 
     await transporter.sendMail({
-      from: `"SparkSpire" <${process.env.EMAIL_USER}>`,
+      from: `"SparkSpire" <${emailFrom}>`,
       to: email,
       subject,
       html: `

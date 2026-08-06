@@ -36,7 +36,7 @@ const port = process.env.PORT || 5000;
 const frontendDist = path.join(__dirname, '../Frontend/dist');
 
 app.use(express.static(frontendDist));
-app.get('*', (req, res) => {
+app.use((req, res) => {
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ message: 'API route not found' });
     }
