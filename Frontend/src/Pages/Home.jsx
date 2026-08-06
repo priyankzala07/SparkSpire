@@ -105,7 +105,7 @@ const Home = () => {
                                 <h2 className="text-xl font-bold text-slate-100 mb-3">{event.title}</h2>
                                 <div className="flex flex-col gap-2 mb-4 text-slate-400 text-sm">
                                     <div className="flex items-center gap-2">
-                                        <FaCalendarAlt className="text-slate-400" />
+                                        <FaCalendarAlt className="text-slate-300" />
                                         <span>{new Date(event.date).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
